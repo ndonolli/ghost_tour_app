@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, ListView } from 'react-native'
+import { View, Text, ListView, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 
 // For empty lists
@@ -60,10 +60,10 @@ class SitesScreen extends React.Component {
   *************************************************************/
   _renderRow (rowData) {
     return (
-      <View style={styles.row}>
+      <TouchableOpacity style={styles.row} onPress={() => console.log(rowData)}>
         <Text style={styles.boldLabel}>{rowData.title}</Text>
         <Text style={styles.label}>{rowData.description}</Text>
-      </View>
+      </TouchableOpacity>
     )
   }
 
@@ -96,6 +96,23 @@ class SitesScreen extends React.Component {
     return (
       <Text> - Footer - </Text>
     )
+  }
+
+  getSitesAsync () {
+    return fetch('http://localhost:3000/sites')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          dataSource: responseJson.data
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
+  componentWillMount () {
+    this.getSitesAsync()
   }
 
   render () {
